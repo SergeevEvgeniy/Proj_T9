@@ -24,19 +24,20 @@ public class DReader implements File_Reader {
         FName += ".txt";
         File file = new File(FName);
         Tries tr = new Tries();
-        /*
-         Scanner scan;
-         try {
-         scan = new Scanner(file);
-         while (scan.hasNextLine()) {
-         String str = scan.nextLine();
-         //tr.add(scan.nextLine());
-         Cut cut = new Cut();
-         System.out.println(cut.Cut_Last(str) + " ");
-         }
-         } catch (FileNotFoundException ex) {
-         Logger.getLogger(FReader.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
+
+        Scanner scan;
+        try {
+            scan = new Scanner(file);
+            while (scan.hasNextLine()) {
+                String str = scan.nextLine();
+                Cut cut = new Cut();
+                Object[] word_digit = new Object[2];
+                word_digit = cut.Cut_Digit(str);
+                tr.add(word_digit[0].toString(), (int) word_digit[1]);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return tr;
     }
 
