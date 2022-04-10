@@ -1,37 +1,47 @@
 package T9_Proj;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Tries {
 
     private final Node root;
+    HashMap search_list;
 
     public Tries() {
         root = new Node(false);
     }
 
-    public void search_all(String word, Node some) {
-        //TODO for list<>
-        Node crawl = some;
-        char ch = 1;//
-        while (!crawl.children.isEmpty()) { // пока есть куда ползти
-            //keyset or values or entrySet
+    String previous;
+
+    private void search_all(String word, Node crawl) {
+        //TODO ищет листья до конца слов
+        if (!crawl.children.isEmpty()) { // пока есть уровень с буквами ниже
+            Set<Map.Entry<Character, Node>> set = crawl.children.entrySet();
+            for (Map.Entry<Character, Node> entry : set) {
+                if (entry.getValue().end == true) {
+                    search_list.put(entry.getValue().word + entry.getKey(), entry.getValue().ch);
+                } else {
+                    word += entry.getKey();
+                    search_all(word, entry.getValue());
+                }
             }
+        }
     }
 
-    HashMap search_list = new HashMap<>();
-
-    public boolean search(String word) {
-        //TODO already use
+    public HashMap search(String word) {
+        //TODO выделяет нужную ветку (введенное слово)
         Node crawl = root;
+        search_list = new HashMap<>();
         int n = word.length();
         for (int i = 0; i < n; i++) {
             char ch = word.charAt(i);
             if (crawl.children.get(ch) == null) {
-                return false;
+                return search_list; // empty
             } else {
                 crawl = crawl.children.get(ch);
-                if (i == n - 1) { //&& crawl.end == true) {
+                if (i == n - 1) {
                     if (crawl.end == true) {
                         search_list.put(word, crawl.ch);
                     }
@@ -39,10 +49,10 @@ public class Tries {
                 }
             }
         }
-        return false;
+        return search_list;//full;
     }
 
-    public void add(String word) {
+    public void add(String word, int number) {
         Node crawl = root;
         int n = word.length();
         for (int i = 0; i < n; i++) {
@@ -51,14 +61,17 @@ public class Tries {
                 crawl = crawl.children.get(ch);
             } else {
                 final Node temp = new Node(false);
+                temp.word = word.substring(0, i);
                 crawl.children.put(ch, temp);
                 crawl = temp;
             }
             if (i == n - 1) {
                 crawl.end = true;
                 crawl.ch += 1;
+                if (number != 0) {
+                    crawl.ch = number;
+                }
             }
-            System.out.println(ch + " " + crawl.end + " " + crawl.ch);
         }
     }
 }

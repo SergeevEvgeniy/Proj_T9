@@ -6,10 +6,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Женя
- */
 public class DReader implements File_Reader {
 
     String FName;
@@ -40,5 +36,4 @@ public class DReader implements File_Reader {
         }
         return tr;
     }
-
 }
